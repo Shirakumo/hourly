@@ -29,7 +29,7 @@
   
   (db:create 'hour
              '((task (:id task))
-               (author :id)
+               (logger :id)
                (start (:integer 5))
                (end (:integer 5))
                (comment :text))
@@ -38,7 +38,8 @@
 (defun ensure-id (object)
   (etypecase object
     (db:id object)
-    (dm:data-model (dm:id object))))
+    (dm:data-model (dm:id object))
+    (user:user (user:id object))))
 
 (defun fixup-ids (dms field)
   (dolist (dm dms dms)
@@ -48,6 +49,11 @@
   (if (and thing (string/= thing ""))
       (parse-integer thing)
       default))
+
+(defun url> (uri &key query fragment)
+  (uri-to-url uri :representation :external
+                  :query query
+                  :fragment fragment))
 
 (defun mktable (&rest entries)
   (let ((table (make-hash-table)))
@@ -94,14 +100,19 @@
        (unless (equal (user:id user) (dm:field dm "author"))
          (check-project (dm:field dm "project"))))
       (hour
-       (check (dm:field dm "author"))))
+       (check (dm:field dm "logger"))))
     dm))
 
-(defun list-projects (user &key (skip 0) amount)
-  (let ((id (ensure-id user)))
-    (fixup-ids (dm:get (rdb:join (project _id) (access project)) (db:query (:or (:= 'author id) (:= 'user id)))
-                       :sort '((title :desc)) :skip skip :amonut amount :hull 'project)
-               "project")))
+(defun list-projects (&key user (skip 0) amount)
+  (if user
+      (let ((id (ensure-id user)))
+        (nconc (dm:get 'project (db:query (:= 'author id))
+                       :sort '((title :desc)) :skip skip :amount amount :hull 'project)
+               (fixup-ids (dm:get (rdb:join (access project) (project _id)) (db:query (:= 'user id))
+                                  :sort '((title :desc)) :skip skip :amount amount :hull 'project)
+                          "project")))
+      (dm:get 'project (db:query :all)
+              :sort '((title :desc)) :skip skip :amount amount)))
 
 (defun find-project (title &optional (errorp T))
   (or (dm:get-one 'project (db:query (:= 'title title)))
@@ -189,11 +200,19 @@
     (dm:delete task)))
 
 (defun list-hours (task)
-  (dm:get 'hour (db:query (:= 'task (ensure-id task))) :sort '((start :asc))))
+  (dm:get 'hour (db:query (:= 'task (ensure-id task))) :sort '((start :desc))))
 
-(defun make-hour (task &key (author (auth:current)) (start (get-universal-time)) end comment)
+(defun ensure-hour (hour-ish)
+  (etypecase hour-ish
+    (db:id (or (dm:get-one 'hour (db:query (:= '_id hour-ish)))
+               (error "No such hour ~a" hour-ish)))
+    (string
+     (ensure-hour (db:ensure-id hour-ish)))
+    (dm:data-model hour-ish)))
+
+(defun make-hour (task &key (logger (auth:current)) (start (get-universal-time)) end comment)
   (dm:with-model hour ('hour NIL)
-    (setf-dm-fields hour task author start end comment)
+    (setf-dm-fields hour task logger start end comment)
     (dm:insert hour)))
 
 (defun edit-hour (hour &key end comment)
@@ -202,3 +221,18 @@
 
 (defun delete-hour (hour)
   (dm:delete hour))
+
+(defun current-hour (&key (user (auth:current)) project task)
+  (cond (project
+         (dm:get-one (rdb:join (hour task) (task _id))
+                     (db:query (:and (:null 'end)
+                                     (:= 'logger (user:id user))
+                                     (:= 'project (dm:id (ensure-project project)))))
+                     :sort '((start :desc))))
+        (task
+         (dm:get-one 'hour (db:query (:and (:null 'end)
+                                           (:= 'logger (user:id user))
+                                           (:= 'task (dm:id (ensure-task task)))))
+                     :sort '((start :desc))))
+        (T
+         (dm:get-one 'hour (db:query (:and (:null 'end) (:= 'logger (user:id user)))) :sort '((start :desc))))))

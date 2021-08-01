@@ -1,20 +1,18 @@
 <c:using value="task">
-  <form class="box task" method="post" @action="hourly/api/hourly/task/edit">
+  <form class="panel overview task" method="post" @action="hourly/api/hourly/task/edit">
     <input type="text" class="title" name="title" lquery="(val title)" required>
     <time lquery="(time time)">2021</time>
     <span class="author" lquery="(text (user:username author))">AUTHOR</span>
-    <textarea lquery="(html description)" class="description" name="description">
-      STUFF
-    </textarea>
-    <input type="hidden" name="task" lquery="(val _id)" />
     <input type="submit" value="Save" />
+    <textarea lquery="(html description)" class="description" name="description"></textarea>
+    <input type="hidden" name="task" lquery="(val _id)" />
   </form>
   <c:if test="(** :hour)">
     <c:then>
       <c:using value="(** :hour)">
-        <form class="box log" method="post" @action="hourly/api/hourly/task/stop">
-          <h2>Quicklog</h2>
-          <time lquery="(time start)"></time>
+        <form class="panel log" method="post" @action="hourly/api/hourly/task/stop">
+          <h3>Quicklog</h3>
+          <time lquery="(time start :clock)"></time>
           <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
           <input type="text" class="comment" name="comment" placeholder="comment" />
           <input type="hidden" name="hour" lquery="(val _id)" />
@@ -23,23 +21,22 @@
       </c:using>
     </c:then>
     <c:else>
-      <form class="box log" method="post" @action="hourly/api/hourly/task/start">
-        <h2>Quicklog</h2>
+      <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
+        <h3>Quicklog</h3>
         <input type="hidden" name="task" lquery="(val _id)" />
         <input type="text" class="comment" name="comment" placeholder="comment" />
         <input type="submit" value="Start" />
       </form>
     </c:else>
   </c:if>
-  <div class="box hours">
-    <h2>Hours</h2>
-    <ul iterate="hours">
+  <div class="panel list hours">
+    <h3>Hours</h3>
+    <ul iterate="(** :hours)">
       <li class="hour">
-        <span class="author" lquery="(text (user:username author))">Author</span>
+        <span class="clock" lquery="(text (format-relative-time (- (or end (get-universal-time)) start)))">Clock</span>
         <span class="comment" lquery="(text comment)">Comment</span>
-        <span class="author" lquery="(text (user:username author))"></span>
+        <span class="author" lquery="(text (user:username logger))">Author</span>
         <time class="start" lquery="(time start)"></time>
-        <time class="end" lquery="(time end)"></time>
       </li>
     </ul>
   </div>

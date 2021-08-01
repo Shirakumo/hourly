@@ -54,7 +54,7 @@
   (api-output (check-accessible (ensure-project project))))
 
 (define-api hourly/project/list (&optional amount skip) (:access (perm hourly user))
-  (api-output (list-projects (auth:current) :amount (int* amount) :skip (int* skip 0))))
+  (api-output (list-projects :user (auth:current) :amount (int* amount) :skip (int* skip 0))))
 
 (define-api hourly/project/new (title &optional description access-user[] access-level[]) (:access (perm hourly project new))
   (let ((project (make-project title :description description
@@ -146,12 +146,12 @@
   (cond (task
          (let* ((task (check-accessible (ensure-task task)))
                 (hour (make-hour task :comment comment)))
-           (output hour "Hour created." "hourly/~a/~a#~a" (dm:field task "project") (dm:id task) (dm:id hour))))
+           (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
         (project
          (let* ((project (check-accessible (ensure-project project)))
                 (task (make-task project "untitled"))
                 (hour (make-hour task :comment comment)))
-           (output hour "Hour created." "hourly/~a/~a#~a" (dm:field task "project") (dm:id task) (dm:id hour))))
+           (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
         (T
          (error "Fuck"))))
 
@@ -159,13 +159,13 @@
   (let* ((hour (check-accessible (ensure-hour hour)))
          (task (ensure-task (dm:field hour "task"))))
     (edit-hour hour :end (get-universal-time) :comment comment)
-    (output hour "Hour logged." "hourly/~a/~a#~a" (dm:field task "project") (dm:id task) (dm:id hour))))
+    (output hour "Hour logged." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
 
 (define-api hourly/task/note (hour comment) (:access (perm hourly user))
   (let* ((hour (check-accessible (ensure-hour hour)))
          (task (ensure-task (dm:field hour "task"))))
     (edit-hour hour :comment comment)
-    (output hour "Hour logged." "hourly/~a/~a#~a" (dm:field task "project") (dm:id task) (dm:id hour))))
+    (output hour "Hour logged." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
 
 (define-api hourly/task/undo (hour) (:access (perm hourly user))
   (let* ((hour (check-accessible (ensure-hour hour) :level 2))

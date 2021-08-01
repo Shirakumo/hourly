@@ -12,17 +12,13 @@
   </head>
   <body>
     <header>
-      <h1><a href="#" @href="hourly/" lquery="(text title)">Hourly</a></h1>
+      <h1><a href="#" @href="hourly/">Hourly</a></h1>
       <h2>
         <c:when test="up">
           <a lquery="(attr :href up) (text up-text)"></a>
         </c:when>
         <c:splice lquery="(text page)"/>
       </h2>
-      <a href="#" @href="hourly/" class="label">
-        Dashboard
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-      </a>
     </header>
     <main>
       <div class="box info" lquery='(text (post/get "message"))'></div>

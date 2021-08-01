@@ -17,7 +17,7 @@
 (define-page dashboard "hourly/^$" (:access (perm hourly user))
   (render-page "Dashboard"
                (@template "dashboard.ctml")
-               :projects (list-projects)
+               :projects (list-projects :user (auth:current))
                :hour (current-hour)))
 
 (define-page project "hourly/([^/]+)/?" (:uri-groups (project) :access (perm hourly user))
@@ -26,16 +26,16 @@
                  (@template "project.ctml")
                  :up (url> "hourly/") :up-text "Dashboard"
                  :project project
-                 :tasks (list-tasks :amount 100 :skip (* 100 (1- (int* (post/get "page") 1))))
-                 :hour (current-hour))))
+                 :tasks (list-tasks project :amount 100 :skip (* 100 (1- (int* (post/get "page") 1))))
+                 :hour (current-hour :project project))))
 
 (define-page task "hourly/([^/]+)/([^/]+)/?" (:uri-groups (project task) :access (perm hourly user))
   (let* ((project (ensure-project project))
          (task (check-accessible (ensure-task task project))))
     (render-page (dm:field task "title")
                  (@template "task.ctml")
-                 :up (url> "hourly/~a" (dm:field project "title")) :up-text (dm:field project "title")
+                 :up (url> (format NIL "hourly/~a" (dm:field project "title"))) :up-text (dm:field project "title")
                  :project project
                  :task task
                  :hours (list-hours task)
-                 :hour (current-hour))))
+                 :hour (current-hour :task task))))
