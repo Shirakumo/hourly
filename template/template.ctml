@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8"/>
+    <title><c:splice lquery="(text page)"/> - Hourly</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="index, follow" />
+    <link rel="stylesheet" type="text/css" href="../static/hourly.css" @href="/static/hourly/hourly.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous"/>
+    <link rel="api-root" @href="hourly/api/hourly/"/>
+    <meta name="viewport" content="width=device-width"/>
+  </head>
+  <body>
+    <header>
+      <h1><a href="#" @href="hourly/" lquery="(text title)">Hourly</a></h1>
+      <h2>
+        <c:when test="up">
+          <a lquery="(attr :href up) (text up-text)"></a>
+        </c:when>
+        <c:splice lquery="(text page)"/>
+      </h2>
+      <a href="#" @href="hourly/" class="label">
+        Dashboard
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+      </a>
+    </header>
+    <main>
+      <div class="box info" lquery='(text (post/get "message"))'></div>
+      <div class="box error" lquery='(text (post/get "error"))'></div>
+      <c:splice lquery="(html content)"/>
+      <script @src="/static/hourly/hourly.js"></script>
+    </main>
+    <footer>
+      &copy; <time lquery="(time T)">2019</time> <c:splice lquery="(text copyright)">Shirakumo</c:splice><br/>
+      Running on <a href="https://shirakumo.org/projects/hourly">Hourly <c:splice lquery="(text version)">0.0.0</c:splice></a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<form class="box chart trend" data-type="line" action="stats">
+  <h2>Hours logged</h2>
+  <select name="scale">
+    <option value="week">Week</option>
+    <option value="month">Month</option>
+    <option value="year">Year</option>
+  </select>
+  <canvas></canvas>
+</form>
+<c:when test="hour">
+  <c:using value="hour">
+    <form class="box log" method="post" @action="hourly/api/hourly/task/stop">
+      <h2>Quicklog</h2>
+      <time lquery="(time start)"></time>
+      <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
+      <input type="text" class="comment" name="comment" placeholder="comment" />
+      <input type="hidden" name="hour" lquery="(val _id)" />
+      <input type="submit" value="Stop" />
+    </form>
+  </c:using>
+</c:when>
+<div class="box projects">
+  <h2>Projects</h2>
+  <form @action="hourly/api/hourly/project/new" class="create">
+    <input type="text" name="title" placeholder="Project name" required />
+    <input type="submit" value="Create" />
+  </form>
+  <ul iterate="projects">
+    <li class="project">
+      <a @href="hourly/{0} title">Project</a>
+      <time lquery="(time time)"></time>
+    </li>
+  </ul>
+</div>

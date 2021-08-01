@@ -1,0 +1,58 @@
+<c:using value=":project">
+  <form class="box project" method="post" @action="hourly/api/hourly/project/edit">
+    <input type="text" class="title" name="title" lquery="(val title)" required>
+    <span class="author" lquery="(text (user:username author))">AUTHOR</span>
+    <textarea lquery="(html description)" class="description" name="description">
+      STUFF
+    </textarea>
+    <input type="hidden" name="project" lquery="(val _id)" />
+    <input type="submit" value="Save" />
+  </form>
+  <c:if test="(** :hour)">
+    <c:then>
+      <c:using value="(** :hour)">
+        <form class="box log" method="post" @action="hourly/api/hourly/task/stop">
+          <h2>Quicklog</h2>
+          <time lquery="(time start)"></time>
+          <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
+          <input type="text" class="comment" name="comment" placeholder="comment" />
+          <input type="hidden" name="hour" lquery="(val _id)" />
+          <input type="submit" value="Stop" />
+        </form>
+      </c:using>
+    </c:then>
+    <c:else>
+      <form class="box log" method="post" @action="hourly/api/hourly/task/start">
+        <h2>Quicklog</h2>
+        <input type="hidden" name="project" lquery="(val _id)" />
+        <input type="text" class="comment" name="comment" placeholder="comment" />
+        <input type="submit" value="Start" />
+      </form>
+    </c:else>
+  </c:if>
+  <form class="box chart trend" data-type="line" action="project/stats">
+      <h2>Hours logged</h2>
+      <input type="hidden" name="project" lquery="(val _id)"/>
+      <select name="scale">
+        <option value="week">Week</option>
+        <option value="month">Month</option>
+        <option value="year">Year</option>
+      </select>
+      <canvas></canvas>
+  </form>
+  <div class="box tasks">
+    <h2>Tasks</h2>
+    <form @action="hourly/api/hourly/task/new" class="create">
+      <input type="text" name="title" placeholder="Task name" required />
+      <input type="hidden" name="project" value="(val _id)" />
+      <input type="submit" value="Create" />
+    </form>
+    <ul iterate="tasks">
+      <li class="task">
+        <a @href="hourly/{0}/{1} (** :title) _id" lquery="(text title)">Task</a>
+        <span class="author" lquery="(text (user:username author))"></span>
+        <time lquery="(time time)"></time>
+      </li>
+    </ul>
+  </div>
+</c:using>
