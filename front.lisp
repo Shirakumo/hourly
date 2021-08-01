@@ -18,7 +18,8 @@
   (render-page "Dashboard"
                (@template "dashboard.ctml")
                :projects (list-projects :user (auth:current))
-               :hour (current-hour)))
+               :hour (current-hour)
+               :personal (find-project "personal" NIL)))
 
 (define-page project "hourly/([^/]+)/?" (:uri-groups (project) :access (perm hourly user))
   (let ((project (check-accessible (ensure-project project))))
@@ -37,5 +38,5 @@
                  :up (url> (format NIL "hourly/~a" (dm:field project "title"))) :up-text (dm:field project "title")
                  :project project
                  :task task
-                 :hours (list-hours task)
+                 :hours (list-hours :task task)
                  :hour (current-hour :task task))))

@@ -1,7 +1,8 @@
 (html
  :font-family sans-serif
  :font-size 14pt
- :color (hex 101010))
+ :color (hex 101010)
+ :background (F0F0F0))
 
 (body
  :margin 0)
@@ -9,6 +10,8 @@
 (a
  :text-decoration none
  :color (hex 0088EE))
+((:and a :hover)
+ :color (hex 33AAFF))
 
 (header
  :background (hex EEE)
@@ -107,11 +110,11 @@
    (li
     :display flex
     :padding 0.1em 0.2em
-    (a :flex-grow 1)
+    (.title :flex-grow 1)
     (.comment :flex-grow 1)
     (>* :padding 0 0.2em))
    ((:and li (:nth-child 2n+1))
-    :background (hex E0E0E0))))
+    :background (hex E8E8E8))))
  (.panel.log
   (.clock
    :margin 0 0.2em)
@@ -119,6 +122,10 @@
    :content "since ")
   ((:and .clock :before)
    :content "for "))
+ (.panel.chart
+  (canvas
+   :width 100%
+   :background (hex FFFFFF)))
  (.panel
   :background (hex F0F0F0)
   :border-bottom 0.2em solid (hex E0E0E0)

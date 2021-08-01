@@ -196,11 +196,14 @@
 
 (defun delete-task (task)
   (db:with-transaction ()
-    (mapc #'delete-hour (list-hours task))
+    (mapc #'delete-hour (list-hours :task task))
     (dm:delete task)))
 
-(defun list-hours (task)
-  (dm:get 'hour (db:query (:= 'task (ensure-id task))) :sort '((start :desc))))
+(defun list-hours (&key task logger)
+  (cond (task
+         (dm:get 'hour (db:query (:= 'task (ensure-id task))) :sort '((start :desc))))
+        (logger
+         (dm:get 'hour (db:query (:= 'logger (user:id logger))) :sort '((start :desc))))))
 
 (defun ensure-hour (hour-ish)
   (etypecase hour-ish

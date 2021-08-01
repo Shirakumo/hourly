@@ -4,14 +4,14 @@
     <time lquery="(time time)">2021</time>
     <span class="author" lquery="(text (user:username author))">AUTHOR</span>
     <input type="submit" value="Save" />
-    <textarea lquery="(html description)" class="description" name="description"></textarea>
+    <textarea lquery="(html description)" class="description" name="description" placeholder="Description..."></textarea>
     <input type="hidden" name="task" lquery="(val _id)" />
   </form>
   <c:if test="(** :hour)">
     <c:then>
       <c:using value="(** :hour)">
         <form class="panel log" method="post" @action="hourly/api/hourly/task/stop">
-          <h3>Quicklog</h3>
+          <h3>Complete running log</h3>
           <time lquery="(time start :clock)"></time>
           <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
           <input type="text" class="comment" name="comment" placeholder="comment" />
@@ -22,7 +22,7 @@
     </c:then>
     <c:else>
       <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
-        <h3>Quicklog</h3>
+        <h3>Log in <c:splice lquery="(text (clip (** :project) :title))"/> under <c:splice lquery="(text title)"/></h3>
         <input type="hidden" name="task" lquery="(val _id)" />
         <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
         <input type="submit" value="Start" />
@@ -37,6 +37,9 @@
         <span class="comment" lquery="(text comment)">Comment</span>
         <span class="author" lquery="(text (user:username logger))">Author</span>
         <time class="start" lquery="(time start)"></time>
+        <a @href="hourly/api/hourly/task/undo?hour={0} _id">
+          <i class="fas fa-fw fa-trash-can"></i>
+        </a>
       </li>
     </ul>
   </div>

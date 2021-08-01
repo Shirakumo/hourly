@@ -3,14 +3,14 @@
     <input type="text" class="title" name="title" lquery="(val title)" required>
     <span class="author" lquery="(text (user:username author))">AUTHOR</span>
     <input type="submit" value="Save" />
-    <textarea lquery="(html description)" class="description" name="description"></textarea>
+    <textarea lquery="(html description)" class="description" name="description" placeholder="Description..."></textarea>
     <input type="hidden" name="project" lquery="(val _id)" />
   </form>
   <c:if test="(** :hour)">
     <c:then>
       <c:using value="(** :hour)">
         <form class="panel log" method="post" @action="hourly/api/hourly/task/stop">
-          <h3h2>Quicklog</h3>
+          <h3>Complete running log</h3>
           <time lquery="(time start)"></time>
           <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
           <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
@@ -21,7 +21,7 @@
     </c:then>
     <c:else>
       <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
-        <h3>Quicklog</h3>
+        <h3>Log in <c:splice lquery="(text title)"/> under new task</h3>
         <input type="hidden" name="project" lquery="(val _id)" />
         <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
         <input type="submit" value="Start" />
@@ -33,10 +33,10 @@
       <input type="hidden" name="project" lquery="(val _id)"/>
       <select name="scale">
         <option value="week">Week</option>
-        <option value="month">Month</option>
+        <option value="month" selected>Month</option>
         <option value="year">Year</option>
       </select>
-      <canvas></canvas>
+      <canvas height="200"></canvas>
   </form>
   <div class="panel list tasks">
     <h3>Tasks</h3>
@@ -47,7 +47,7 @@
     </form>
     <ul iterate="(** :tasks)">
       <li class="task">
-        <a @href="hourly/{0}/{1} (** :title) _id" lquery="(text title)">Task</a>
+        <a class="title" @href="hourly/{0}/{1} (** :title) _id" lquery="(text title)">Task</a>
         <span class="author" lquery="(text (user:username author))"></span>
         <time lquery="(time time)"></time>
       </li>

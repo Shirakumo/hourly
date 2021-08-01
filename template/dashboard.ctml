@@ -1,24 +1,36 @@
+<c:if test="hour">
+  <c:then>
+    <c:using value="hour">
+      <form class="panel log" method="post" @action="hourly/api/hourly/task/stop">
+        <h3>Quicklog</h3>
+        <time lquery="(time start)"></time>
+        <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
+        <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
+        <input type="hidden" name="hour" lquery="(val _id)" />
+        <input type="submit" value="Stop" />
+      </form>
+    </c:using>
+  </c:then>
+  <c:elseif test="personal">
+    <c:using value="personal">
+      <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
+        <h3>Log in <c:splice lquery="(text title)"/> under new task</h3>
+        <input type="hidden" name="project" lquery="(val _id)" />
+        <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
+        <input type="submit" value="Start" />
+      </form>
+    </c:using>
+  </c:elseif>
+</c:if>
 <form class="panel chart trend" data-type="line" action="stats">
   <h3>Hours logged</h3>
   <select name="scale">
     <option value="week">Week</option>
-    <option value="month">Month</option>
+    <option value="month" selected>Month</option>
     <option value="year">Year</option>
   </select>
-  <canvas></canvas>
+  <canvas height="200"></canvas>
 </form>
-<c:when test="hour">
-  <c:using value="hour">
-    <form class="panel log" method="post" @action="hourly/api/hourly/task/stop">
-      <h3>Quicklog</h3>
-      <time lquery="(time start)"></time>
-      <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
-      <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
-      <input type="hidden" name="hour" lquery="(val _id)" />
-      <input type="submit" value="Stop" />
-    </form>
-  </c:using>
-</c:when>
 <div class="panel list projects">
   <h3>Projects</h3>
   <form @action="hourly/api/hourly/project/new" class="create">
@@ -27,7 +39,7 @@
   </form>
   <ul iterate="projects">
     <li class="project">
-      <a @href="hourly/{0} title" lquery="(text title)">Project</a>
+      <a class="title" @href="hourly/{0} title" lquery="(text title)">Project</a>
     </li>
   </ul>
 </div>
