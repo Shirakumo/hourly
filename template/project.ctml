@@ -13,7 +13,7 @@
           <h3h2>Quicklog</h3>
           <time lquery="(time start)"></time>
           <span class="clock" lquery="(text (format-relative-time (- (get-universal-time) start)))"></span>
-          <input type="text" class="comment" name="comment" placeholder="comment" />
+          <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
           <input type="hidden" name="hour" lquery="(val _id)" />
           <input type="submit" value="Stop" />
         </form>
@@ -23,7 +23,7 @@
       <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
         <h3>Quicklog</h3>
         <input type="hidden" name="project" lquery="(val _id)" />
-        <input type="text" class="comment" name="comment" placeholder="comment" />
+        <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
         <input type="submit" value="Start" />
       </form>
     </c:else>
