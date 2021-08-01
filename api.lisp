@@ -22,11 +22,11 @@
                    for d = (mod (- start i) (length y-labels))
                    for tmax = (get-universal-time) then tmin
                    for tmin = (- tmax step)
-                   for hours = (db:get 'hour
-                                       (db:query (:and (:= 'author (dm:id user))
-                                                       (:<= 'start tmax)
-                                                       (:< tmin 'end)))
-                                       :fields '(start end))
+                   for hours = (db:select 'hour
+                                          (db:query (:and (:= 'author (dm:id user))
+                                                          (:<= 'start tmax)
+                                                          (:< tmin 'end)))
+                                          :fields '(start end))
                    do (push (aref y-labels d) labels)
                       (push (loop for hour in hours
                                   when (gethash hour "end")
@@ -86,11 +86,11 @@
                    for d = (mod (- start i) (length y-labels))
                    for tmax = (get-universal-time) then tmin
                    for tmin = (- tmax step)
-                   for hours = (db:get (rdb:join (hour task) (((task project) (project _id)) _id))
-                                       (db:query (:and (:= 'project (dm:id project))
-                                                       (:<= 'start tmax)
-                                                       (:< tmin 'end)))
-                                       :fields '(start end))
+                   for hours = (db:select (rdb:join (hour task) (((task project) (project _id)) _id))
+                                          (db:query (:and (:= 'project (dm:id project))
+                                                          (:<= 'start tmax)
+                                                          (:< tmin 'end)))
+                                          :fields '(start end))
                    do (push (aref y-labels d) labels)
                       (push (loop for hour in hours
                                   when (gethash hour "end")

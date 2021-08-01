@@ -38,7 +38,7 @@
 (defun ensure-id (object)
   (etypecase object
     (db:id object)
-    (dm:model (dm:id object))))
+    (dm:data-model (dm:id object))))
 
 (defun fixup-ids (dms field)
   (dolist (dm dms dms)
@@ -63,7 +63,7 @@
                          `(typecase ,var
                             (null)
                             (user:user
-                             (setf (hm:field ,modelg ,field) (user:id ,var)))
+                             (setf (dm:field ,modelg ,field) (user:id ,var)))
                             (dm:data-model
                              (setf (dm:field ,modelg ,field) (dm:id ,var)))
                             (T
@@ -136,7 +136,7 @@
       (when users-p
         (let ((existing (dm:get 'access (db:query (:= 'project (dm:id project))))))
           (loop for (user level) in users
-                for previous = (find (user:id user) existing :key (lambda (dm) (hm:field dm "user")) :test #'equal)
+                for previous = (find (user:id user) existing :key (lambda (dm) (dm:field dm "user")) :test #'equal)
                 do (cond (previous
                           (setf existing (delete previous existing))
                           (setf (dm:field previous "level") (or level 1))
