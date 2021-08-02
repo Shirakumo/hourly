@@ -33,7 +33,7 @@
                (start (:integer 5))
                (end (:integer 5))
                (comment :text))
-             :indices '(task author)))
+             :indices '(task logger)))
 
 (defun ensure-id (object)
   (etypecase object

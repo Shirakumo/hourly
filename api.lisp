@@ -140,7 +140,7 @@
                    for d = (mod (- start i) (length y-labels))
                    for tmax = (get-universal-time) then tmin
                    for tmin = (- tmax step)
-                   for hours = (db:select (rdb:join (hour task) (((task project) (project _id)) _id))
+                   for hours = (db:select (rdb:join (((hour task) (task _id)) project) (project _id))
                                           (db:query (:and (:= 'project (dm:id project))
                                                           (:<= 'start tmax)
                                                           (:< tmin 'end))))
@@ -202,8 +202,8 @@
            (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
         (project
          (let* ((project (check-accessible (ensure-project project)))
-                (task (make-task project "untitled"))
-                (hour (make-hour task :comment comment)))
+                (task (make-task project (or* comment "untitled")))
+                (hour (make-hour task)))
            (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
         (T
          (error "Fuck"))))
