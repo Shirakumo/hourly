@@ -206,7 +206,15 @@ class Hourly{
                         legend: {display: false},
                         scales: {
                             yAxes: [{
-                                ticks: {suggestedMin: 0}
+                                ticks: {
+                                    suggestedMin: 0,
+                                    callback: (value, index, values)=>{
+                                        var mins = Math.floor(value / 60) % 60;
+                                        var hours = Math.floor((value / 60) / 60);
+                                        return ((0<hours)?hours+':':'')
+                                            + ((10<mins)?mins:'0'+mins);
+                                    }
+                                }
                             }]
                         },
                         plugins: {
