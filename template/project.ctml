@@ -23,7 +23,7 @@
       <form class="panel log" method="post" @action="hourly/api/hourly/task/start">
         <h3>Log in <c:splice lquery="(text title)"/> under new task</h3>
         <input type="hidden" name="project" lquery="(val _id)" />
-        <input type="text" class="comment" name="comment" placeholder="comment" autofocus />
+        <input type="text" class="comment" name="comment" placeholder="task title" autofocus />
         <input type="submit" value="Start" />
       </form>
     </c:else>
