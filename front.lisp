@@ -19,7 +19,8 @@
                (@template "dashboard.ctml")
                :projects (list-projects :user (auth:current))
                :hour (current-hour)
-               :personal (find-project "personal" NIL)))
+               :personal (or (find-project "personal" NIL)
+                             (make-project "personal"))))
 
 (define-page project "hourly/project/([^/]+)(?:/(.+))?$" (:uri-groups (id title) :access (perm hourly user))
   (declare (ignore title))
