@@ -47,7 +47,7 @@
     </form>
     <ul iterate="(** :tasks)">
       <li class="task">
-        <a class="title" @href="hourly/{0}/{1} (** :title) _id" lquery="(text title)">Task</a>
+        <a class="title" @href="hourly/task/{0}/{1} _id title" lquery="(text title)">Task</a>
         <span class="author" lquery="(text (user:username author))"></span>
         <time lquery="(time time)"></time>
       </li>

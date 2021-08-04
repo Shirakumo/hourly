@@ -115,7 +115,10 @@
               :sort '((title :desc)) :skip skip :amount amount)))
 
 (defun find-project (title &optional (errorp T))
-  (or (dm:get-one 'project (db:query (:= 'title title)))
+  ;; KLUDGE: This is terrible.
+  (or (loop for project in (list-projects :user (auth:current))
+            do (when (string= title (dm:get project "title"))
+                 (return project)))
       (when errorp
         (error "No such project ~a" title))))
 

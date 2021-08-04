@@ -39,7 +39,7 @@
   </form>
   <ul iterate="projects">
     <li class="project">
-      <a class="title" @href="hourly/{0} title" lquery="(text title)">Project</a>
+      <a class="title" @href="hourly/project/{0}/{1} _id title" lquery="(text title)">Project</a>
     </li>
   </ul>
 </div>

@@ -21,8 +21,9 @@
                :hour (current-hour)
                :personal (find-project "personal" NIL)))
 
-(define-page project "hourly/([^/]+)/?" (:uri-groups (project) :access (perm hourly user))
-  (let ((project (check-accessible (ensure-project project))))
+(define-page project "hourly/project/([^/]+)(?:/(.+))?$" (:uri-groups (id title) :access (perm hourly user))
+  (declare (ignore title))
+  (let ((project (check-accessible (ensure-project (db:ensure-id id)))))
     (render-page (dm:field project "title")
                  (@template "project.ctml")
                  :up (url> "hourly/") :up-text "Dashboard"
@@ -30,12 +31,14 @@
                  :tasks (list-tasks project :amount 100 :skip (* 100 (1- (int* (post/get "page") 1))))
                  :hour (current-hour :project project))))
 
-(define-page task "hourly/([^/]+)/([^/]+)/?" (:uri-groups (project task) :access (perm hourly user))
-  (let* ((project (ensure-project project))
-         (task (check-accessible (ensure-task task project))))
+(define-page task "hourly/task/([^/]+)(?:/(.+))?$" (:uri-groups (id title) :access (perm hourly user))
+  (declare (ignore title))
+  (let* ((task (check-accessible (ensure-task (db:ensure-id id))))
+         (project (ensure-project (dm:field task "project"))))
     (render-page (dm:field task "title")
                  (@template "task.ctml")
-                 :up (url> (format NIL "hourly/~a" (dm:field project "title"))) :up-text (dm:field project "title")
+                 :up (url> (format NIL "hourly/~a/~a" (dm:id project) (dm:field project "title")))
+                 :up-text (dm:field project "title")
                  :project project
                  :task task
                  :hours (list-hours :task task)

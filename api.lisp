@@ -115,7 +115,7 @@
                                      :users (loop for user in access-user[]
                                                   for level in access-level[]
                                                   collect (list user (int* level 1))))))
-    (output project "Project created." "hourly/~a" (dm:field project "title"))))
+    (output project "Project created." "hourly/project/~a/~a" (dm:id project) (dm:field project "title"))))
 
 (define-api hourly/project/edit (project &optional title description access-user[] access-level[]) (:access (perm hourly user))
   (let ((project (check-accessible (ensure-project project) :level 3)))
@@ -124,12 +124,12 @@
                           :users (loop for user in access-user[]
                                        for level in access-level[]
                                        collect (list user (int* level 1))))
-    (output project "Project updated." "hourly/~a" (dm:field project "title"))))
+    (output project "Project updated." "hourly/project/~a/~a" (dm:id project) (dm:field project "title"))))
 
 (define-api hourly/project/delete (project) (:access (perm hourly user))
   (let ((project (check-accessible (ensure-project project) :level 4)))
     (delete-project project)
-    (output project "Project deleted." "hourly/~a" (dm:field project "title"))))
+    (output project "Project deleted." "hourly/")))
 
 (define-api hourly/project/stats (project &optional (scale "week")) (:access (perm hourly user))
   (let* ((project (check-accessible (ensure-project project)))
@@ -176,17 +176,17 @@
 (define-api hourly/task/new (project title &optional description) (:access (perm hourly user))
   (let* ((project (check-accessible (ensure-project project) :level 2))
          (task (make-task project title :description description)))
-    (output task "Task created." "hourly/~a/~a" (dm:field project "title") (dm:id task))))
+    (output task "Task created." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
 (define-api hourly/task/edit (task &optional title description) (:access (perm hourly user))
   (let ((task (check-accessible (ensure-task task) :level 2)))
     (edit-task task :title title :description description)
-    (output task "Task updated." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+    (output task "Task updated." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
 (define-api hourly/task/delete (task) (:access (perm hourly user))
   (let ((task (check-accessible (ensure-task task) :level 2)))
     (delete-task task)
-    (output task "Task deleted." "hourly/~a" (dm:field task "project"))))
+    (output task "Task deleted." "hourly/project/~a" (dm:field task "project"))))
 
 (define-api hourly/task/stats (task) (:access (perm hourly user))
   (let ((task (check-accessible (ensure-task task))))
@@ -199,12 +199,12 @@
   (cond (task
          (let* ((task (check-accessible (ensure-task task)))
                 (hour (make-hour task :comment comment)))
-           (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+           (output hour "Hour created." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
         (project
          (let* ((project (check-accessible (ensure-project project)))
                 (task (make-task project (or* comment "untitled")))
                 (hour (make-hour task)))
-           (output hour "Hour created." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+           (output hour "Hour created." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
         (T
          (error "Fuck"))))
 
@@ -212,16 +212,16 @@
   (let* ((hour (check-accessible (ensure-hour hour)))
          (task (ensure-task (dm:field hour "task"))))
     (edit-hour hour :end (get-universal-time) :comment comment)
-    (output hour "Hour logged." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+    (output hour "Hour logged." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
 (define-api hourly/task/note (hour comment) (:access (perm hourly user))
   (let* ((hour (check-accessible (ensure-hour hour)))
          (task (ensure-task (dm:field hour "task"))))
     (edit-hour hour :comment comment)
-    (output hour "Hour logged." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+    (output hour "Hour logged." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
 (define-api hourly/task/undo (hour) (:access (perm hourly user))
   (let* ((hour (check-accessible (ensure-hour hour) :level 2))
          (task (ensure-task (dm:field hour "task"))))
     (delete-hour hour)
-    (output hour "Hour deleted." "hourly/~a/~a" (dm:field task "project") (dm:id task))))
+    (output hour "Hour deleted." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
