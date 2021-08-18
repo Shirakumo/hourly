@@ -63,6 +63,18 @@
           (parse-integer thing))
       default))
 
+(defun start-of-day (&optional (time (get-universal-time)))
+  (multiple-value-bind (ss mm hh d m y) (decode-universal-time time 0)
+    (declare (ignore ss mm hh))
+    (encode-universal-time 0 0 0 d m y 0)))
+
+(defun end-of-day (&optional (time (get-universal-time)))
+  (+ (start-of-day time) (1- (* 24 60 60))))
+
+(defun day-of-year (&optional (time (get-universal-time)))
+  (1+ (floor (- time (encode-universal-time 0 0 0 1 1 (nth-value 5 (decode-universal-time time)) NIL))
+             (* 24 60 60))))
+
 (defun url> (uri &key query fragment)
   (uri-to-url uri :representation :external
                   :query query
@@ -255,3 +267,4 @@
                      :sort '((start :desc))))
         (T
          (dm:get-one 'hour (db:query (:and (:null 'end) (:= 'logger (user:id user)))) :sort '((start :desc))))))
+

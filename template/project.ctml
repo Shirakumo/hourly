@@ -28,7 +28,7 @@
       </form>
     </c:else>
   </c:if>
-  <form class="panel chart trend" data-type="line" action="project/stats">
+  <form class="panel chart trend" data-type="bar" action="project/stats">
       <h3>Hours logged</h3>
       <input type="hidden" name="project" lquery="(val _id)"/>
       <select name="scale">

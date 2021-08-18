@@ -22,7 +22,7 @@
     </c:using>
   </c:elseif>
 </c:if>
-<form class="panel chart trend" data-type="line" action="stats">
+<form class="panel chart trend" data-type="bar" action="stats">
   <h3>Hours logged</h3>
   <select name="scale">
     <option value="week">Week</option>

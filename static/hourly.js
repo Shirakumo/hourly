@@ -245,8 +245,6 @@ class Hourly{
                         }
                     }
                 });
-                if(element.dataset.type == "bar")
-                    chart.options.scales.yAxes[0].ticks.suggestedMax = 1.0;
                 refresh();
             });
         [].forEach.call(element.querySelectorAll("select"), (el)=>{
