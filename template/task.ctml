@@ -31,6 +31,13 @@
   </c:if>
   <div class="panel list hours">
     <h3>Hours</h3>
+    <form @action="hourly/api/hourly/task/log" class="create-time">
+      <input type="text" name="comment" placeholder="comment" />
+      <input type="datetime-local" name="start" placeholder="start" autocomplete="on" required />
+      <input type="time" name="duration" placeholder="duration" required />
+      <input type="hidden" name="task" lquery="(val _id)" />
+      <input type="submit" value="Create" />
+    </form>
     <ul iterate="(** :hours)">
       <li class="hour">
         <span class="clock" lquery="(text (format-relative-time (- (or end (get-universal-time)) start)))">Clock</span>

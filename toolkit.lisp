@@ -50,6 +50,19 @@
       (parse-integer thing)
       default))
 
+(defun time* (thing &optional default)
+  (if (and thing (string/= thing ""))
+      (or (cl-ppcre:register-groups-bind (y m d hh mm ss) ("(?:(\\d+)-(\\d+)-(\\d+)T)?(\\d+):(\\d+)(?::(\\d+))?" thing)
+            (encode-universal-time (parse-integer (or ss "0"))
+                                   (parse-integer mm)
+                                   (parse-integer hh)
+                                   (parse-integer (or d "1"))
+                                   (parse-integer (or m "1"))
+                                   (parse-integer (or y "1900"))
+                                   0))
+          (parse-integer thing))
+      default))
+
 (defun url> (uri &key query fragment)
   (uri-to-url uri :representation :external
                   :query query
@@ -221,8 +234,8 @@
     (setf-dm-fields hour task logger start end comment)
     (dm:insert hour)))
 
-(defun edit-hour (hour &key end comment)
-  (setf-dm-fields hour end comment)
+(defun edit-hour (hour &key start end comment)
+  (setf-dm-fields hour start end comment)
   (dm:save hour))
 
 (defun delete-hour (hour)

@@ -28,6 +28,8 @@ class Hourly{
         var self = this;
         self.registerAll(element, ".chart", self.registerChart);
         self.registerAll(element, "form", self.registerForm);
+        self.registerAll(element, "input[type=datetime-local]", self.registerDateInput);
+        self.registerAll(element, "input[type=time]", self.registerTimeInput);
     }
 
     registerAll(element, query, regger){
@@ -35,6 +37,27 @@ class Hourly{
         var elements = element.querySelectorAll(query);
         for(var i=0; i<elements.length; ++i)
             regger.apply(self, [elements[i]]);
+    }
+
+    registerDateInput(element){
+        if(element.value == ""){
+            var date = new Date(),
+                ten = function (i) {
+                    return (i < 10 ? '0' : '') + i;
+                },
+                YYYY = date.getFullYear(),
+                MM = ten(date.getMonth() + 1),
+                DD = ten(date.getDate()),
+                HH = ten(date.getHours()),
+                II = ten(date.getMinutes());
+            element.value = YYYY+'-'+MM+'-'+DD+'T'+HH+':'+II;
+        }
+    }
+
+    registerTimeInput(element){
+        if(element.value == ""){
+            element.valueAsNumber = 0;
+        }
     }
 
     registerForm(element){

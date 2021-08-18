@@ -214,10 +214,18 @@
     (edit-hour hour :end (get-universal-time) :comment comment)
     (output hour "Hour logged." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
-(define-api hourly/task/note (hour comment) (:access (perm hourly user))
+(define-api hourly/task/update (hour &optional start end duration comment) (:access (perm hourly user))
   (let* ((hour (check-accessible (ensure-hour hour)))
          (task (ensure-task (dm:field hour "task"))))
-    (edit-hour hour :comment comment)
+    (edit-hour hour
+               :comment comment
+               :start (when start (time* start))
+               :end (cond (end
+                           (time* end))
+                          (duration
+                           (if start
+                               (+ (time* start) (time* duration))
+                               (+ (dm:field hour "start") (time* duration))))))
     (output hour "Hour logged." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
 
 (define-api hourly/task/undo (hour) (:access (perm hourly user))
@@ -225,3 +233,9 @@
          (task (ensure-task (dm:field hour "task"))))
     (delete-hour hour)
     (output hour "Hour deleted." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
+
+(define-api hourly/task/log (task start &optional duration end comment) (:access (perm hourly user))
+  (let* ((task (check-accessible (ensure-task task)))
+         (start (time* start))
+         (hour (make-hour task :start start :end (if end (time* end) (+ start (time* duration))) :comment comment)))
+    (output hour "Hour created." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
