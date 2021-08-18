@@ -1,0 +1,61 @@
+<article class="panel export">
+  <c:using value="project">
+    <form method="post" enctype="multipart/form-data">
+      <div class="row" title="Whether to include the field description header line">
+        <label for="header">CSV Header</label>
+        <select name="header" id="header">
+          <option value="include">include</option>
+          <option value="exclude">exclude</option>
+        </select>
+      </div>
+      <div class="row" title="What character to use to separate columns in an entry.">
+        <label for="col-separator">Column Separator</label>
+        <select name="col-separator" id="col-separator">
+          <option value="comma">comma</option>
+          <option value="tab">tab</option>
+        </select>
+      </div>
+      <div class="row" title="What line separator to use.">
+        <label for="row-separator">Row Separator</label>
+        <select name="row-separator" id="row-separator">
+          <option value="crlf">CRLF</option>
+          <option value="lf">LF</option>
+        </select>
+      </div>
+      <div class="row" title="When to quote field values.">
+        <label for="quotation-use">Quote Use</label>
+        <select name="quotation-use" id="quotation-use">
+          <option value="as-needed">as needed</option>
+          <option value="always">always</option>
+        </select>
+      </div>
+      <div class="row" title="How to quote field values.">
+        <label for="quotation-mark">Quote Mark</label>
+        <select name="quotation-mark" id="quotation-mark">
+          <option value="double-quote">double quote</option>
+          <option value="single-quote">single quote</option>
+        </select>
+      </div>
+      <div class="row" title="How to escape the quote mark within quoted values.">
+        <label for="quotation-escape">Quote Escape</label>
+        <select name="quotation-escape" id="quotation-escape">
+          <option value="quote">quote</option>
+          <option value="backslash">backslash</option>
+        </select>
+      </div>
+      <div class="row" title="What format to use to write out time values.">
+        <label for="time-format">Time Format</label>
+        <select name="time-format" id="time-format">
+          <option value="iso-8601">ISO 8601</option>
+          <option value="rfc-1123">RFC 1123</option>
+          <option value="timestamp">Unix timestamp</option>
+        </select>
+      </div>
+      <input type="hidden" name="browser" value="true" />
+      <div class="row">
+        <input type="hidden" name="project" lquery="(val _id)" />
+        <input type="submit" value="Export" @formaction="hourly/api/hourly/export" data-nofetch="true" />
+      </div>
+    </form>
+  </c:using>
+</article>

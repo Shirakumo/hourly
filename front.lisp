@@ -44,3 +44,11 @@
                  :task task
                  :hours (list-hours :task task)
                  :hour (current-hour :task task))))
+
+(define-page export-csv "hourly/export(?:/(.+))?$" (:uri-groups (project) :access (perm hourly user))
+  (let* ((project (when project (check-accessible (ensure-project (db:ensure-id project))))))
+    (render-page "Export"
+                 (@template "export.ctml")
+                 :up (when project (url> (format NIL "hourly/~a/~a" (dm:id project) (dm:field project "title"))))
+                 :up-text (when project (dm:field project "title"))
+                 :project project)))

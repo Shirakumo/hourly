@@ -139,8 +139,18 @@
   (iframe
    :width 100%
    :border none)
+  (.actions
+   (a :padding 0.1em 0.2em
+      :color inherit
+      :background (hex FFFFFF)
+      :border 1px solid (hex E0E0E0)
+      :cursor pointer
+      (i :margin 0 0.2em))
+   ((:and a :hover)
+    :background (hex E0E0E0)))
   ((:or input textarea select)
    :height 1.5em
+   :min-width 10em
    :font-size 1.0em
    :background (rgba 255 255 255 0.5)
    :border 0.1em solid (hex AAA)
@@ -151,7 +161,10 @@
    :width 100%
    :min-height 3em)
   (input[type=submit]
-   :cursor pointer)
+   :cursor pointer
+   :min-width inherit)
+  (input[type=time]
+   :min-width inherit)
   ((:and input[type=submit] :hover)
    :background (hex E0E0E0))
   ((:and .author :before)

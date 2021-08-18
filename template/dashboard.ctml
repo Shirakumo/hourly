@@ -42,4 +42,7 @@
       <a class="title" @href="hourly/project/{0}/{1} _id title" lquery="(text title)">Project</a>
     </li>
   </ul>
+  <nav class="actions">
+    <a href="hourly/export" class="button"><i class="fas fa-file-csv"></i>Export Personal Hours</a>
+  </nav>
 </div>

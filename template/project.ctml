@@ -52,5 +52,8 @@
         <time lquery="(time time)"></time>
       </li>
     </ul>
+    <nav class="actions">
+      <a @href="hourly/export/{0} _id" class="button"><i class="fas fa-file-csv"></i>Export Project Hours</a>
+    </nav>
   </div>
 </c:using>
