@@ -44,8 +44,8 @@
         <span class="comment" lquery="(text comment)">Comment</span>
         <span class="author" lquery="(text (user:username logger))">Author</span>
         <time class="start" lquery="(time start)"></time>
-        <a @href="hourly/api/hourly/task/undo?hour={0} _id">
-          <i class="fas fa-fw fa-trash-can"></i>
+        <a @href="hourly/api/hourly/task/undo?hour={0}&browser=true _id">
+          <i class="fas fa-fw fa-trash"></i>
         </a>
       </li>
     </ul>
