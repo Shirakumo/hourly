@@ -49,5 +49,8 @@
         </a>
       </li>
     </ul>
+    <nav class="actions">
+      <a @href="hourly/pin/{0} _id" class="button"><i class="fas fa-thumbtack"></i>Pin Task</a>
+    </nav>
   </div>
 </c:using>

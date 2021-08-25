@@ -189,7 +189,10 @@
 (define-api hourly/task/hours (task) (:access (perm hourly user))
   (api-output (list-hours :task (check-accessible (ensure-task task)))))
 
-(define-api hourly/task/start (&optional task project comment) (:access (perm hourly user))
+(define-api hourly/task/start (&optional task project comment stop) (:access (perm hourly user))
+  (when stop
+    (let ((current (current-hour)))
+      (when current (edit-hour current :end (get-universal-time)))))
   (cond (task
          (let* ((task (check-accessible (ensure-task task)))
                 (hour (make-hour task :comment comment)))
@@ -233,3 +236,13 @@
          (start (time* start))
          (hour (make-hour task :start start :end (if end (time* end) (+ start (time* duration))) :comment comment)))
     (output hour "Hour created." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
+
+(define-api hourly/task/pin (task &optional (label "")) (:access (perm hourly user))
+  (let* ((task (check-accessible (ensure-task task)))
+         (pin (pin-task task :label label)))
+    (output pin "Task pinned." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))
+
+(define-api hourly/task/unpin (task) (:access (perm hourly user))
+  (let* ((task (check-accessible (ensure-task task)))
+         (pin (unpin-task task)))
+    (output pin "Task unpinned." "hourly/task/~a/~a" (dm:id task) (dm:field task "title"))))

@@ -99,6 +99,25 @@
  (.box.error
   :background (hex AA0000)
   :color (hex FFFFFF))
+ (.panel.pins
+  :display flex
+  :flex-wrap wrap
+  (.pin
+   :padding 0.2em
+   :background (hex FFFFFF)
+   :border 0.1em solid (hex E0E0E0)
+   :color black
+   :border-radius 0.3em
+   (i :font-size 2.0em
+      :text-align center
+      :display block
+      :margin 0.1em)
+   (.title
+    :text-align center
+    :display block))
+  ((:and .pin :hover)
+   :background (hex E0E0E0)
+   :border-color (hex A0A0A0)))
  (.panel.overview
   (input[type=submit]
    :float right))

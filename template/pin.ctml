@@ -1,0 +1,19 @@
+<article class="panel pin">
+  <form method="post">
+    <div class="row">
+      <label>Icon</label>
+      <i class="fas fa-fw" lquery="(text (clip pin :label))"></i>
+      <select name="label" lquery="(select (clip pin :label))">
+        <c:import file='(template-file "icons.ctml" :hourly)'>
+      </select>
+    </div>
+    <div class="row">
+      <input type="hidden" name="browser" value="true" />
+      <input type="hidden" name="task" lquery="(val (clip task :_id))" />
+      <input type="submit" value="Pin" @formaction="hourly/api/hourly/task/pin" data-nofetch="true" />
+      <c:when test="pin">
+        <input type="submit" value="Unpin" @formaction="hourly/api/hourly/task/unpin" data-nofetch="true" />
+      </c:when>
+    </div>
+  </form>
+</article>

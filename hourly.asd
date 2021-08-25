@@ -18,6 +18,7 @@
   :serial T
   :components ((:file "module")
                (:file "toolkit")
+               (:file "objects")
                (:file "front")
                (:file "api"))
   :depends-on ((:interface :relational-database)

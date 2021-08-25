@@ -20,7 +20,8 @@
                :projects (list-projects :user (auth:current))
                :hour (current-hour)
                :personal (or (find-project "personal" NIL)
-                             (make-project "personal"))))
+                             (make-project "personal"))
+               :pins (list-pinned-tasks)))
 
 (define-page project "hourly/project/([^/]+)(?:/(.+))?$" (:uri-groups (id title) :access (perm hourly user))
   (declare (ignore title))
@@ -52,3 +53,14 @@
                  :up (when project (url> (format NIL "hourly/~a/~a" (dm:id project) (dm:field project "title"))))
                  :up-text (when project (dm:field project "title"))
                  :project project)))
+
+(define-page pin "hourly/pin/(.+)" (:uri-groups (id) :access (perm hourly user))
+  (let* ((task (check-accessible (ensure-task (db:ensure-id id))))
+         (project (ensure-project (dm:field task "project"))))
+    (render-page (dm:field task "title")
+                 (@template "pin.ctml")
+                 :up (url> (format NIL "hourly/~a/~a" (dm:id project) (dm:field project "title")))
+                 :up-text (dm:field project "title")
+                 :project project
+                 :task task
+                 :pin (find-pin task))))

@@ -1,3 +1,9 @@
+<div class="panel pins" iterate="pins">
+  <a @href="hourly/api/hourly/task/start?browser=true&task={0}&stop=true task" class="pin">
+    <i class="fas fa-fw" lquery="(text label)"></i>
+    <span class="title" lquery="(text title)"></span>
+  </a>
+</div>
 <c:if test="hour">
   <c:then>
     <c:using value="hour">
